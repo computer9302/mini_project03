@@ -2,23 +2,24 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
 <%-- request.setCharacterEncoding("UTF-8"); --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	
-<%@ page import="java.util.List"%>
+<%-- 	
+<%@ page import="java.util.List"
 
 <%@ page import="com.model2.mvc.service.domain.Product"%>
 <%@ page import="com.model2.mvc.common.Search"%>
 <%@ page import="com.model2.mvc.common.Page"%>
 <%@ page import="com.model2.mvc.common.util.CommonUtil"%>
+--%>
 
 
 
 
-<%
-String menu = request.getParameter("menu");
-%>
+<%-- String menu = request.getParameter("menu");--%>
 
 
+<%--   
 <%
 List<Product> list = (List<Product>) request.getAttribute("list");
 Page resultPage = (Page) request.getAttribute("resultPage");
@@ -28,7 +29,7 @@ Search search = (Search) request.getAttribute("search");
 String searchCondition = CommonUtil.null2str(search.getSearchCondition());
 String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 %>
-
+--%>
 
 <html>
 <head>
@@ -37,11 +38,13 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
 <script type="text/javascript">
+<!--
 	// 검색 / page 두가지 경우 모두 Form 전송을 위해 JavaScrpt 이용  
 	function fncGetProductList(currentPage) {
 		document.getElementById("currentPage").value = currentPage;
 	   	document.detailForm.submit();		
 	}
+-->
 </script>
 </head>
 
@@ -50,7 +53,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 	<div style="width: 98%; margin-left: 10px;">
 
 		<form name="detailForm"
-			action="/listProduct.do?menu=<%=request.getParameter("menu")%>"
+			action="/listProduct.do?menu=${param.menu}"
 			method="post">
 
 			<table width="100%" height="37" border="0" cellpadding="0"
@@ -63,6 +66,15 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="93%" class="ct_ttl01">
+								<c:if test="${param.menu == 'manage'}">
+									상품관리
+								</c:if>
+									<c:if test="${param.menu == 'search'}">
+									상품목록조회
+								</c:if>		
+									
+								
+								<%-- 
 									<%
 									if (menu.equals("manage")) {
 									%> 상품 관리<%
@@ -70,6 +82,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 									%>상품목록조회<%
 									}
 									%>
+								--%>
 								</td>
 							</tr>
 						</table>
@@ -84,14 +97,12 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 				<tr>
 					<td align="right"><select name="searchCondition"
 						class="ct_input_g" style="width: 80px">
-							<option value="0"
-								<%=(searchCondition.equals("0") ? "selected" : "")%>>상품번호</option>
-							<option value="1"
-								<%=(searchCondition.equals("1") ? "selected" : "")%>>상품명</option>
-							<option value="2"
-								<%=(searchCondition.equals("2") ? "selected" : "")%>>상품가격</option>
+						<option value="0"  ${ ! empty search.searchCondition && search.searchCondition==0 ? "selected" : "" }>상품번호</option>
+						<option value="1"  ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" }>상품명</option>
+						<option value="2"  ${ ! empty search.searchCondition && search.searchCondition==2 ? "selected" : "" }>상품가격</option>
+				
 					</select> <input type="text" name="searchKeyword"
-						value="<%=searchKeyword%>" class="ct_input_g"
+						value="${! empty search.searchKeyword ? search.searchKeyword : ""}"   class="ct_input_g"
 						style="width: 200px; height: 19px"></td>
 
 					<td align="right" width="70">
@@ -113,8 +124,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 				<tr>
-					<td colspan="11">전체 <%=resultPage.getTotalCount()%> 건수, 현재 <%=resultPage.getCurrentPage()%>
-						페이지
+					<td colspan="11">전체  ${resultPage.totalCount } 건수, 현재 ${resultPage.currentPage}  페이지
 					</td>
 				</tr>
 				<tr>
@@ -131,10 +141,11 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 				<tr>
 					<td colspan="11" bgcolor="808285" height="1"></td>
 				</tr>
+				<%--  
 				<%
 				for (int i = 0; i < list.size(); i++) {
 					Product vo = list.get(i);
-				%>
+				
 				<tr class="ct_list_pop">
 					<td align="center"><%= i + 1 %></td>
 					<td></td>
@@ -162,6 +173,33 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 				<%
 				}
 				%>
+				--%>
+				
+				
+				<c:set var="i" value="0" />
+				<c:forEach var="product" items="${list}">
+					<c:set var="i" value="${ i+1 }" />
+					<tr class="ct_list_pop">
+						<td align="center">${ i }</td>
+						<td></td>
+						<td align="left">
+						<c:if test= "${param.menu == 'manage'}">
+							<a href="/updateProductView.do?prodNo=${product.prodNo}">${product.prodName}</a>
+						</c:if>
+							<c:if test= "${param.menu == 'search'}">
+							<a href="/getProduct.do?prodNo=${product.prodNo}">${product.prodName}</a>
+						</c:if>		
+						</td>					
+						<td></td>
+						<td align="left">${product.price}</td>
+						<td></td>
+						<td align="left">${product.regDate}</td>
+						<td align="left">${product.proTranCode}</td>		
+					</tr>
+					<tr>
+					<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+					</tr>
+				</c:forEach>
 			</table>
 
 <!-- PageNavigation Start... -->
@@ -170,6 +208,7 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 	<tr>
 		<td align="center">
 		   <input type="hidden" id="currentPage" name="currentPage" value=""/>
+		   <%-- 
 			<% if( resultPage.getCurrentPage() <= resultPage.getPageUnit() ){ %>
 					◀ 이전
 			<% }else{ %>
@@ -185,6 +224,8 @@ String searchKeyword = CommonUtil.null2str(search.getSearchKeyword());
 			<% }else{ %>
 					<a href="javascript:fncGetProductList('<%=resultPage.getEndUnitPage()+1%>')">이후 ▶</a>
 			<% } %>
+		--%>
+			<jsp:include page="../common/pageNavigator.jsp"/>
 		
     	</td>
 	</tr>
