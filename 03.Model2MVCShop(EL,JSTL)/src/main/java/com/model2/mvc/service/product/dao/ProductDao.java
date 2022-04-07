@@ -13,9 +13,9 @@ import com.model2.mvc.common.util.DBUtil;
 import com.model2.mvc.service.domain.Product;
 
 
-public class ProductDAO {
+public class ProductDao {
 	
-	public ProductDAO(){
+	public ProductDao(){
 	}
 
 	public void insertProduct(Product product) throws Exception {

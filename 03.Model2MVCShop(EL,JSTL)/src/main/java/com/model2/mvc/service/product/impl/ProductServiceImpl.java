@@ -4,16 +4,16 @@ import java.util.Map;
 
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.product.ProductService;
-import com.model2.mvc.service.product.dao.ProductDAO;
+import com.model2.mvc.service.product.dao.ProductDao;
 import com.model2.mvc.service.domain.Product;
 
 
 public class ProductServiceImpl implements ProductService{
 	
-	private ProductDAO productDAO;
+	private ProductDao productDAO;
 	
 	public ProductServiceImpl() {
-		productDAO=new ProductDAO();
+		productDAO=new ProductDao();
 	}
 
 	public void addProduct(Product product) throws Exception {
