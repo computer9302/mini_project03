@@ -55,7 +55,7 @@ function fncAddProduct(){
 
 <form name="detailForm" method="post" >
 
-<input type="hidden" name="${product.getProdName}" value="${product.getProdNo}%>"/>
+<input type="hidden" name="${product.getProdName}" value="${product.getProdNo}"/>
 
 <table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
 	<tr>
